@@ -124,3 +124,64 @@ static const string html3 = R"(<!DOCTYPE html>
 static const string file3 = R"(D:\Projects\cxx\WebAssembly\ws2\square.wasm)";
 
 AddFunction(CSquare, 3, html3, file3)
+
+
+static const string html4 = R"(<!doctype html> 
+<html>
+   <head> 
+      <meta charset="utf-8">
+      <title>WebAssembly Reverse Number</title>
+      <style>
+         div { 
+            font-size : 30px; text-align : center; color:orange; 
+         } 
+      </style>
+   </head>
+   <body>
+      <div id="textcontent"></div>
+      <script> 
+         let reverse; 
+         fetch("/4/wasm")  
+            .then(bytes => bytes.arrayBuffer()) 
+            .then(mod => WebAssembly.compile(mod)) 
+            .then(module => {return new WebAssembly.Instance(module) })
+            .then(instance => { 
+            console.log(instance); 
+            reverse = instance.exports._Z13reversenumberi(1439898); 
+            console.log("The reverse of 1439898 = " +reverse); 
+            document.getElementById("textcontent")
+               .innerHTML = "The reverse of 1439898 = " +reverse; 
+         }); 
+      </script>
+   </body>
+</html>)";
+
+static const string file4 = R"(D:\Projects\cxx\WebAssembly\ws3\reverse.wasm)";
+
+AddFunction(CReverse, 4, html4, file4)
+
+
+static const string html5 = R"(<!DOCTYPE html> 
+<html>
+   <head> 
+      <meta charset="UTF-8">
+   </head>
+   <body>
+      <script> 
+         const importObj = { 
+            env: { _Z10displaylogi: n => console.log(n) } 
+         };
+         fetch("fib.wasm") 
+            .then(bytes => bytes.arrayBuffer()) 
+            .then(module => WebAssembly.instantiate(module, importObj)) 
+            .then(finalcode => { 
+            console.log(finalcode); 
+            console.log(finalcode.instance.exports._Z15fibonacciSeriesi(10)); 
+         });
+      </script> 
+   </body>
+</html>)";
+
+static const string file5 = R"(D:\Projects\cxx\WebAssembly\ws4\fib.wasm)";
+
+AddFunction(CFib,5,html5,file5)

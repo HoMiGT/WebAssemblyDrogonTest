@@ -57,3 +57,7 @@ AddController(CModule,1)
 AddController(CTestMain,2)
 
 AddController(CSquare,3)
+
+AddController(CReverse,4)
+
+AddController(CFib,5)
