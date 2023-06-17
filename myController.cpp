@@ -171,7 +171,7 @@ static const string html5 = R"(<!DOCTYPE html>
          const importObj = { 
             env: { _Z10displaylogi: n => console.log(n) } 
          };
-         fetch("fib.wasm") 
+         fetch("/5/wasm") 
             .then(bytes => bytes.arrayBuffer()) 
             .then(module => WebAssembly.instantiate(module, importObj)) 
             .then(finalcode => { 
@@ -185,3 +185,35 @@ static const string html5 = R"(<!DOCTYPE html>
 static const string file5 = R"(D:\Projects\cxx\WebAssembly\ws4\fib.wasm)";
 
 AddFunction(CFib,5,html5,file5)
+
+
+static const string html6 = R"(<!DOCTYPE html> 
+<html>
+   <head> 
+      <meta charset="UTF-8">
+   </head>
+   <body>
+      <script> 
+        const memory = new WebAssembly.Memory({initial:256});
+        fetch("/6/wasm")
+            .then(bytes => bytes.arrayBuffer())
+            .then(moduel=>WebAssembly.instantiate(moduel,{
+                env: {
+                  memory: memory,
+                  tableBase: 0,
+                  __memory_base: 0,
+                  __table_base: 0,
+                  mypair: function() {}
+                }
+            }))
+            .then(results=>{
+                const result = results.instance.exports.mypair();
+                console.log(result.i,result.s);
+            })
+      </script> 
+   </body>
+</html>)";
+
+static const string file6 = R"(D:\Projects\cxx\WebAssembly\ws5\pair.wasm)";
+
+AddFunction(CPair,6,html6,file6)
