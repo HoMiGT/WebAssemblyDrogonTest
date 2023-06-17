@@ -194,7 +194,7 @@ static const string html6 = R"(<!DOCTYPE html>
    </head>
    <body>
       <script> 
-        const memory = new WebAssembly.Memory({initial:256});
+        const memory = new WebAssembly.Memory({initial:112});
         fetch("/6/wasm")
             .then(bytes => bytes.arrayBuffer())
             .then(moduel=>WebAssembly.instantiate(moduel,{
@@ -203,12 +203,23 @@ static const string html6 = R"(<!DOCTYPE html>
                   tableBase: 0,
                   __memory_base: 0,
                   __table_base: 0,
-                  mypair: function() {}
+                  //mypair: function() {}
                 }
             }))
             .then(results=>{
-                const result = results.instance.exports.mypair();
-                console.log(result.i,result.s);
+                console.log(results)
+                const wasmInstance = results.instance;
+                console.log(wasmInstance);
+                var buffer = new Int8Array(memory.buffer,0,14);
+                
+                const code = wasmInstance.exports.mypair(buffer.byteOffset);
+                console.log(code);
+                console.log(buffer);
+                let s = "";
+                for (let i = 0; buffer[i] !== 0; ++i) {
+                    s += String.fromCharCode(buffer[i]);
+                }
+                console.log(s);
             })
       </script> 
    </body>
